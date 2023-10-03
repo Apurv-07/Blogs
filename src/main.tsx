@@ -1,14 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
+import App from './App.js'
 import './index.css'
 import { createStore, applyMiddleware } from 'redux'
-import reducer from './redux/Reducer.tsx'
+import reducer from './redux/Reducer.js'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk';
 
 const store=createStore(reducer, applyMiddleware(thunk))
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
       <App />

@@ -1,8 +1,8 @@
 import { Menu, Transition } from '@headlessui/react'
-import React, { Fragment, useState, useEffect } from 'react'
-import MyModal from './Modal'
-import {  deletePost, editModal, fetchPosts, updatePost, viewPosts } from '../redux/Actions'
-import {useDispatch, useSelector} from 'react-redux'
+import React, { Fragment, useState } from 'react'
+// import MyModal from './Modal'
+import {  deletePost, editModal, viewPosts } from '../redux/Actions'
+import {useDispatch} from 'react-redux'
 
 const NewDrop = ({item, setIsOpen}) => {
     const [clicked, setClicked]=useState("");

@@ -1,10 +1,10 @@
 import { Menu, Transition } from '@headlessui/react'
-import React, { Fragment, useState } from 'react'
+import React, { Fragment } from 'react'
 import { useDispatch } from 'react-redux'
-import { fetchUserPosts } from '../redux/Actions'
+import { fetchPosts, fetchUserPosts } from '../redux/Actions'
 
 const UserDrop = ({users}) => {
-    const [active, setActive]=useState(1)
+    // const [active, setActive]=useState(1)
     const dispatch=useDispatch();
   return (
     <div  className="w-0">
@@ -25,10 +25,16 @@ const UserDrop = ({users}) => {
                 >
                     <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="px-1 py-1">
-                            {users.map((item, index)=>{
+                                <Menu.Item onClick={()=>{
+                                    dispatch(fetchPosts());
+                                }}>
+                                   {({ active })=>( <h4 className={`${active ? 'bg-violet-500 text-white' : 'text-gray-200 bg-slate-600'
+                                            } group flex mt-1 w-full items-center rounded-md px-2 py-2 text-sm`}>Get All users</h4>)}
+                                </Menu.Item>
+                            {users.map((item)=>{
                                 return (
                                 <Menu.Item key={item.id} onClick={()=>{
-                                    setActive(item.id)
+                                    // setActive(item.id)
                                     dispatch(fetchUserPosts(item.id))
                                 }}>
                                    {({ active })=>( <h4 className={`${active ? 'bg-violet-500 text-white' : 'text-gray-200 bg-slate-600'

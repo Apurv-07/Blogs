@@ -23,12 +23,12 @@ export const fetchUserPosts = (id) => async (dispatch) => {
   }
 };
 
-export const fetchUsers=()=>async (dispatch)=>{
+export const fetchUsers = () => async (dispatch) => {
   try {
     const response = await axios.get(
       "https://jsonplaceholder.typicode.com/users"
     );
-    dispatch({type: "FETCH_USERS", payload: response.data});
+    dispatch({ type: "FETCH_USERS", payload: response.data });
   } catch (error) {
     console.error(error);
   }
@@ -39,7 +39,7 @@ export const viewPosts = (id) => async (dispatch) => {
     const response = await axios.get(
       `https://jsonplaceholder.typicode.com/posts/${id}`
     );
-    dispatch({ type: "VIEW_POSTS_SUCCESS", payload: response.data});
+    dispatch({ type: "VIEW_POSTS_SUCCESS", payload: response.data });
   } catch (error) {
     console.error(error);
   }
@@ -58,7 +58,7 @@ export const addPost = (post) => async (dispatch) => {
   }
 };
 
-export const editModal=(item)=>{
+export const editModal = (item) => {
   return {
     type: 'EDIT_MODAL',
     payload: item,
@@ -77,56 +77,24 @@ export const deletePost = (id) => async (dispatch) => {
 
 export const updatePost = (id, post) => async (dispatch) => {
   console.log("complex Item", id, post)
-  const updatedPost={
+  const updatedPost = {
     id: post.id,
     userId: post.userId,
     ...id,
   }
+  console.log(updatedPost, "My updated oost")
   try {
-    // Optimistic UI Update: Dispatch an action to update the UI immediately
-    dispatch({ type: "UPDATE_POST_SUCCESS", payload: post });
-
-    // Make the API call to update the post
-    const response = await axios.put(
-      `https://jsonplaceholder.typicode.com/posts/${post.id}`,
-      updatedPost
-    );
-
-    // If the API call was successful, update the Redux state with the response data
-    dispatch({ type: "UPDATE_POST_SUCCESS", payload: response.data, clicked:'Edit' });
-    console.log("Inside update ti see datga", response.data)
+    const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${post.id}`, {
+      method: "PUT",
+      body: JSON.stringify(updatedPost),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+    const responseput = await response.json();
+    console.log("out response here", responseput);
+    dispatch({ type: "UPDATE_POST_SUCCESS", payload: responseput, clicked:'Edit' });
   } catch (error) {
-    // Handle errors here, e.g., display an error message to the user
-    console.error(error);
+    console.error("failed to put the details", error);
   }
 };
-// export const updatePost = (post, clicked) => async (dispatch) => {
-//   try {
-//     const response=await fetch('https://jsonplaceholder.typicode.com/posts/1', {
-//   method: 'PUT',
-//   body: JSON.stringify({
-//     id: 1,
-//     title: 'foo',
-//     body: 'bar',
-//     userId: 1,
-//   }),
-//   headers: {
-//     'Content-type': 'application/json; charset=UTF-8',
-//   },
-// })
-// const data=await response.json()
-// console.log("The data after update", data)
-//     dispatch({ type: "UPDATE_POST_SUCCESS", payload: data, clicked:clicked });
-//   } catch (error) {
-//     console.error(error);
-//   }
-//   try {
-//     const response = await axios.get(
-//       "https://jsonplaceholder.typicode.com/posts"
-//     );
-//     console.log("Making fetch again", response)
-//     dispatch({ type: "FETCH_POSTS_SUCCESS", payload: response.data });
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
