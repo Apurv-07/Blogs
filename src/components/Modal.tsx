@@ -1,16 +1,29 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { updatePost } from '../redux/Actions';
 
 
-export default function MyModal({isOpen, setIsOpen, item, clicked}) {
-  console.log("Inside modal", clicked)
+export default function MyModal({isOpen, setIsOpen, item, clicked, editId}) {
+  console.log("Inside modal", editId)
 
+  const dispatch=useDispatch();
+  let [input, setInput]=useState({
+    title:"",
+    body:"",
+  })
   function closeModal() {
     setIsOpen(false)
   }
 
   function openModal() {
     setIsOpen(true)
+  }
+
+  function handleEdit() {
+    console.log("FInding the item id", item.id)
+    dispatch(updatePost(input, editId));
+    setIsOpen(false)
   }
   
   return (
@@ -40,21 +53,31 @@ export default function MyModal({isOpen, setIsOpen, item, clicked}) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full min-w-[650px] min-h-[400px] max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
                     
                   </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-[20px] font-bold text-gray-500">
+                  
+                  {clicked==="Edit" ? <div className="mt-2 flex gap-5 flex-col min-h-[280px]">
+                    {/* <p className="text-[20px] font-bold text-gray-500">
+                      {item.title}
+                    </p> */}
+                    <input className='rounded-lg w-full border-2 h-10 !border-solid px-2 border-black' placeholder='Title' onChange={(e)=>setInput({...input, title:e.target.value})} />
+                    <input className='rounded-lg w-full border-2 h-10 !border-solid px-2 border-black' placeholder='Body' onChange={(e)=>setInput({...input, body:e.target.value})} />
+                    {/* <p className="text-sm text-gray-500">
+                      {item.body}
+                    </p> */}
+                  </div>: <div className="mt-2 min-h-[280px]">
+                    <p className="text-[20px] font-bold text-gray-500 !leading-[24px]">
                       {item.title}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm mt-10 text-gray-500">
                       {item.body}
                     </p>
-                  </div>
+                  </div>}
 
                   <div className="mt-4">
                     <button
@@ -64,6 +87,13 @@ export default function MyModal({isOpen, setIsOpen, item, clicked}) {
                     >
                       Got it, thanks!
                     </button>
+                    {clicked=="Edit" && <button
+                      type="button"
+                      className="inline-flex ml-10 justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={handleEdit}
+                    >
+                      Update
+                    </button>}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

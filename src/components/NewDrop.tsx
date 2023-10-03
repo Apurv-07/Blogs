@@ -1,7 +1,7 @@
 import { Menu, Transition } from '@headlessui/react'
 import React, { Fragment, useState, useEffect } from 'react'
 import MyModal from './Modal'
-import {  deletePost, fetchPosts, viewPosts } from '../redux/Actions'
+import {  deletePost, editModal, fetchPosts, updatePost, viewPosts } from '../redux/Actions'
 import {useDispatch, useSelector} from 'react-redux'
 
 const NewDrop = ({item, setIsOpen}) => {
@@ -12,15 +12,18 @@ const NewDrop = ({item, setIsOpen}) => {
       const handleDeletePost = (id) => {
         dispatch(deletePost(id));
       };
-    
-      const handleEditPost = (post) => {
-        setEditPost(post);
+  
+      const handleEdit = (item) => {
+        // setClicked('Edit');
+        setIsOpen(true);
+        dispatch(editModal(item))
+        // dispatch(updatePost(id, 'Edit'));
       };
-    
-      const handleUpdatePost = () => {
-        dispatch(updatePost(editPost));
-        setEditPost(null);
-      };
+      
+    //   useEffect(() => {
+    //     console.log("setClicked", clicked);
+    //   }, [clicked]);
+
     const handleViewClick = (id) => {
         setClicked("View")
         console.log("Button clicked");
@@ -51,7 +54,7 @@ const NewDrop = ({item, setIsOpen}) => {
                         <div className="px-1 py-1">
                             <Menu.Item>
                                 {({ active }) => (
-                                    <button
+                                    <button onClick={()=>{handleEdit(item)}}
                                         className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
                                             } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                     >

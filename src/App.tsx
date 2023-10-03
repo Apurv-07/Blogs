@@ -1,10 +1,11 @@
 import './App.css'
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPosts, addPost, deletePost, updatePost } from "./redux/Actions";
+import { fetchPosts, addPost, deletePost, updatePost, fetchUsers } from "./redux/Actions";
 
 import MyModal from './components/Modal'
 import NewDrop from './components/NewDrop'
+import UserDrop from './components/UserDrop';
 
 function App() {
   // const [data, setData] = useState([])
@@ -23,13 +24,12 @@ function App() {
   const dispatch = useDispatch();
   // const {posts, clicked, initialPost} = useSelector((state) => state);
   const myState=useSelector((state) => state);
-  const {posts, initialPost, clicked}=myState;
+  const {posts, initialPost, clicked, users, editItem}=myState;
   console.log("Everything:", myState)
   const [input, setInput] = useState({
     title: "",
     body: ""
   });
-  const [editPost, setEditPost] = useState(null);
 
   const handleAddPost = () => {
         dispatch(addPost({...input, id:posts.length+1, userId: 1}));
@@ -38,24 +38,32 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchPosts());
+    dispatch(fetchUsers())
   }, [dispatch]);
 
   return (
     <div>
+      <div className='flex justify-evenly mt-5'>
+        <div className='p-2 flex gap-2 w-[80%] max-sm:flex-col'>
       <input
         type="text"
         placeholder="Title"
         value={input.title}
+        className='rounded-lg border-2 !border-solid px-2 border-black'
         onChange={(e) => setInput({ ...input, title: e.target.value })}
       />
       <input
         type="text"
         placeholder="Body"
         value={input.body}
+        className='rounded-lg border-2 !border-solid px-2 border-black'
         onChange={(e) => setInput({ ...input, body: e.target.value })}
       />
 
-      <button onClick={handleAddPost}>Add Post</button>
+      <button className='rounded-lg bg-gray-800 text-white px-5 py-2' onClick={handleAddPost}>Add Post</button></div>
+      <UserDrop users={users} />
+      </div>
+
       
       {posts.map((item, index) => {
         return (
@@ -77,7 +85,7 @@ function App() {
           </div> 
         )
       })}
-      <MyModal isOpen={isOpen} setIsOpen={setIsOpen} item={initialPost} clicked={clicked}  />
+      <MyModal isOpen={isOpen} setIsOpen={setIsOpen} item={initialPost} clicked={clicked} editId={editItem} />
     </div >
   )
 }
